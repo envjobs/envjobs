@@ -27,7 +27,7 @@ button {
 </head>
 <body>
 
-<!-- REGISTRATION PAGE -->
+<!-- REGISTER PAGE (VISIBLE FIRST) -->
 <div id="registerPage">
     <h2>Register</h2>
 
@@ -38,16 +38,16 @@ button {
     <button onclick="register()">Register</button>
 </div>
 
-<!-- APPLICATION PAGE -->
+<!-- APPLICATION PAGE (HIDDEN FIRST) -->
 <div id="applyPage" class="hidden">
-    <h2>Job Application</h2>
+    <h2>Apply for Job</h2>
 
     <input type="text" id="firstName" placeholder="First Name"><br>
     <input type="text" id="lastName" placeholder="Last Name"><br>
     <input type="email" id="email" placeholder="Email"><br>
-    <input type="text" id="phone" placeholder="Phone Number"><br>
+    <input type="text" id="phone" placeholder="Phone"><br>
     <input type="text" id="qualification" placeholder="Qualification"><br>
-    <input type="text" id="post" placeholder="Interested Post Title"><br>
+    <input type="text" id="post" placeholder="Interested Post"><br>
 
     <button onclick="apply()">Submit Application</button>
 </div>
@@ -68,14 +68,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// REGISTER FUNCTION
+// REGISTER
 window.register = async function() {
+
     let email = document.getElementById("regEmail").value;
     let password = document.getElementById("regPassword").value;
     let confirm = document.getElementById("confirmPassword").value;
 
     if(email === "" || password === "" || confirm === "") {
-        alert("Please fill all fields");
+        alert("Fill all fields");
         return;
     }
 
@@ -91,22 +92,21 @@ window.register = async function() {
             time: new Date()
         });
 
-        alert("Registered Successfully!");
+        alert("Registration successful!");
 
-        // Move to application page
-        document.getElementById("registerPage").classList.add("hidden");
-        document.getElementById("applyPage").classList.remove("hidden");
+        // SHOW APPLICATION PAGE
+        document.getElementById("registerPage").style.display = "none";
+        document.getElementById("applyPage").style.display = "block";
 
-        // auto fill email
         document.getElementById("email").value = email;
 
     } catch (e) {
         console.error(e);
-        alert("Error in registration");
+        alert("Error saving user");
     }
 };
 
-// APPLY FUNCTION
+// APPLY
 window.apply = async function() {
 
     let data = {
@@ -120,17 +120,17 @@ window.apply = async function() {
     };
 
     if(Object.values(data).includes("")) {
-        alert("Please fill all fields");
+        alert("Fill all fields");
         return;
     }
 
     try {
         await addDoc(collection(db, "applications"), data);
-        alert("Application Submitted Successfully!");
+        alert("Application submitted!");
 
     } catch (e) {
         console.error(e);
-        alert("Error submitting application");
+        alert("Error submitting");
     }
 };
 </script>
