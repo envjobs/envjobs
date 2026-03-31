@@ -2,26 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>EnvJobs Application</title>
+<title>EnvJobs Portal</title>
 
 <style>
-body { font-family: Arial; text-align: center; margin-top: 50px; }
-input { padding: 10px; width: 250px; margin: 5px; }
-button { padding: 10px 20px; }
+body {
+    font-family: Arial;
+    text-align: center;
+    margin-top: 40px;
+}
+input {
+    padding: 10px;
+    width: 250px;
+    margin: 5px;
+}
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+.hidden {
+    display: none;
+}
 </style>
 
 </head>
 <body>
 
-<h2>Apply for Job</h2>
+<!-- REGISTRATION PAGE -->
+<div id="registerPage">
+    <h2>Register</h2>
 
-<input type="text" id="firstName" placeholder="First Name"><br>
-<input type="text" id="lastName" placeholder="Last Name"><br>
-<input type="email" id="email" placeholder="Email"><br>
-<input type="text" id="phone" placeholder="Phone"><br>
-<input type="text" id="qualification" placeholder="Qualification"><br>
+    <input type="email" id="regEmail" placeholder="Email"><br>
+    <input type="password" id="regPassword" placeholder="Password"><br>
+    <input type="password" id="confirmPassword" placeholder="Confirm Password"><br>
 
-<button onclick="apply()">Submit Application</button>
+    <button onclick="register()">Register</button>
+</div>
+
+<!-- APPLICATION PAGE -->
+<div id="applyPage" class="hidden">
+    <h2>Job Application</h2>
+
+    <input type="text" id="firstName" placeholder="First Name"><br>
+    <input type="text" id="lastName" placeholder="Last Name"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="text" id="phone" placeholder="Phone Number"><br>
+    <input type="text" id="qualification" placeholder="Qualification"><br>
+    <input type="text" id="post" placeholder="Interested Post Title"><br>
+
+    <button onclick="apply()">Submit Application</button>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -39,6 +68,45 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// REGISTER FUNCTION
+window.register = async function() {
+    let email = document.getElementById("regEmail").value;
+    let password = document.getElementById("regPassword").value;
+    let confirm = document.getElementById("confirmPassword").value;
+
+    if(email === "" || password === "" || confirm === "") {
+        alert("Please fill all fields");
+        return;
+    }
+
+    if(password !== confirm) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    try {
+        await addDoc(collection(db, "users"), {
+            email: email,
+            password: password,
+            time: new Date()
+        });
+
+        alert("Registered Successfully!");
+
+        // Move to application page
+        document.getElementById("registerPage").classList.add("hidden");
+        document.getElementById("applyPage").classList.remove("hidden");
+
+        // auto fill email
+        document.getElementById("email").value = email;
+
+    } catch (e) {
+        console.error(e);
+        alert("Error in registration");
+    }
+};
+
+// APPLY FUNCTION
 window.apply = async function() {
 
     let data = {
@@ -47,20 +115,22 @@ window.apply = async function() {
         email: document.getElementById("email").value,
         phone: document.getElementById("phone").value,
         qualification: document.getElementById("qualification").value,
+        post: document.getElementById("post").value,
         time: new Date()
     };
 
     if(Object.values(data).includes("")) {
-        alert("Fill all fields");
+        alert("Please fill all fields");
         return;
     }
 
     try {
         await addDoc(collection(db, "applications"), data);
         alert("Application Submitted Successfully!");
+
     } catch (e) {
         console.error(e);
-        alert("Error submitting");
+        alert("Error submitting application");
     }
 };
 </script>
