@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Offline Job Application</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 300px;
+}
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+button {
+    background: blue;
+    color: white;
+    border: none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container" id="registerPage">
+    <h2>Register</h2>
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
+</div>
+
+<div class="container" id="applyPage" style="display:none;">
+    <h2>Job Application</h2>
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="phone" placeholder="Phone">
+    <input type="text" id="qualification" placeholder="Qualification">
+    <button onclick="apply()">Apply</button>
+</div>
+
+<script>
+
+function register() {
+    let email = document.getElementById("regEmail").value;
+    let password = document.getElementById("regPassword").value;
+
+    if(email === "" || password === "") {
+        alert("Fill all fields");
+        return;
+    }
+
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userPassword", password);
+
+    document.getElementById("registerPage").style.display = "none";
+    document.getElementById("applyPage").style.display = "block";
+}
+
+function apply() {
+    let data = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        qualification: document.getElementById("qualification").value
+    };
+
+    if(Object.values(data).includes("")) {
+        alert("Fill all fields");
+        return;
+    }
+
+    let applications = JSON.parse(localStorage.getItem("applications")) || [];
+    applications.push(data);
+    localStorage.setItem("applications", JSON.stringify(applications));
+
+    alert("Application Submitted!");
+}
+
+</script>
+
+</body>
+</html>

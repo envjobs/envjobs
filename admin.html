@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<style>
+    body {
+        font-family: Arial;
+        background: #f4f4f4;
+        padding: 20px;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    th {
+        background: #007BFF;
+        color: white;
+    }
+
+    button {
+        padding: 10px;
+        margin: 10px 0;
+        background: red;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<h2>Admin Panel - Applications</h2>
+
+<button onclick="clearData()">Clear All Applications</button>
+
+<table id="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Qualification</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+function loadData() {
+    let applications = JSON.parse(localStorage.getItem("applications")) || [];
+
+    let tableBody = document.querySelector("#table tbody");
+    tableBody.innerHTML = "";
+
+    applications.forEach(app => {
+        let row = `
+            <tr>
+                <td>${app.firstName}</td>
+                <td>${app.lastName}</td>
+                <td>${app.email}</td>
+                <td>${app.phone}</td>
+                <td>${app.qualification}</td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+
+function clearData() {
+    if(confirm("Are you sure you want to delete all applications?")) {
+        localStorage.removeItem("applications");
+        loadData();
+    }
+}
+
+// Load data on page open
+loadData();
+</script>
+
+</body>
+</html>
