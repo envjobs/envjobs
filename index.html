@@ -2,36 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>EnvJobs</title>
+<title>EnvJobs Application</title>
 
 <style>
 body { font-family: Arial; text-align: center; margin-top: 50px; }
-.container { display: none; }
+input { padding: 10px; width: 250px; margin: 5px; }
+button { padding: 10px 20px; }
 </style>
 
 </head>
 <body>
 
-<!-- REGISTER PAGE -->
-<div id="registerPage">
-    <h2>Register</h2>
-    <input type="email" id="regEmail" placeholder="Email"><br><br>
-    <input type="password" id="regPassword" placeholder="Password"><br><br>
-    <button onclick="register()">Register</button>
-</div>
+<h2>Apply for Job</h2>
 
-<!-- APPLICATION PAGE -->
-<div id="applyPage" class="container">
-    <h2>Job Application</h2>
+<input type="text" id="firstName" placeholder="First Name"><br>
+<input type="text" id="lastName" placeholder="Last Name"><br>
+<input type="email" id="email" placeholder="Email"><br>
+<input type="text" id="phone" placeholder="Phone"><br>
+<input type="text" id="qualification" placeholder="Qualification"><br>
 
-    <input type="text" id="firstName" placeholder="First Name"><br><br>
-    <input type="text" id="lastName" placeholder="Last Name"><br><br>
-    <input type="email" id="email" placeholder="Email"><br><br>
-    <input type="text" id="phone" placeholder="Phone"><br><br>
-    <input type="text" id="qualification" placeholder="Qualification"><br><br>
-
-    <button onclick="apply()">Apply</button>
-</div>
+<button onclick="apply()">Submit Application</button>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -49,21 +39,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.register = function() {
-    let email = document.getElementById("regEmail").value;
-    let password = document.getElementById("regPassword").value;
-
-    if(email === "" || password === "") {
-        alert("Fill all fields");
-        return;
-    }
-
-    // Show application page
-    document.getElementById("registerPage").style.display = "none";
-    document.getElementById("applyPage").style.display = "block";
-};
-
 window.apply = async function() {
+
     let data = {
         firstName: document.getElementById("firstName").value,
         lastName: document.getElementById("lastName").value,
